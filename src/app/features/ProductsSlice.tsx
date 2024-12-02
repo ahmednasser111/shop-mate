@@ -21,7 +21,7 @@ export const getProductList = createAsyncThunk(
 		try {
 			// get method
 			const { data } = await axiosInstance.get(
-				"/products/category/groceries?limit=10"
+				"/products/category/vehicle?limit=10"
 			);
 			return data.products;
 		} catch (error) {

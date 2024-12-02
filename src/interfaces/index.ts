@@ -1,22 +1,46 @@
 export interface IProduct {
-	id?: string;
+	id: number;
 	title: string;
-	price: string;
 	description: string;
+	category: string;
+	price: number;
 	images: string[];
-	category: ICategory;
-	colors: string[];
+	discountPercentage?: number;
+	rating?: number;
+	stock?: number;
+	tags?: string[];
+	brand?: string;
+	sku?: string;
+	weight?: number;
+	dimensions?: {
+		width: number;
+		height: number;
+		depth: number;
+	};
+	warrantyInformation?: string;
+	shippingInformation?: string;
+	availabilityStatus?: string;
+	reviews?: {
+		rating: number;
+		comment: string;
+		date: string;
+		reviewerName: string;
+		reviewerEmail: string;
+	}[];
+	returnPolicy?: string;
+	minimumOrderQuantity?: number;
+	meta?: {
+		createdAt: string;
+		updatedAt: string;
+		barcode: string;
+		qrCode: string;
+	};
+	thumbnail?: string;
 }
 export interface IValidation {
 	title: string;
-	price: string;
+	price: number;
 	description: string;
-	colors: string[];
-}
-export interface ICategory {
-	id: string;
-	name: string;
-	imgURL: string;
 }
 export interface IInputs {
 	id: string;
@@ -28,7 +52,7 @@ export interface IInputs {
 export interface IProductInputs {
 	title: string;
 	desc: string;
-	price: string;
+	price: number;
 }
 
 export interface ICartItem extends IProduct {

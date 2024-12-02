@@ -1,9 +1,9 @@
 import { memo, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
-import { ICategory, IProduct } from "../../interfaces/index";
+import { Heart, Edit, Trash2, ShoppingCart, Minus } from "lucide-react";
+import { IProduct } from "../../interfaces/index";
 import Image from "../Image/Image";
 import Button from "../ui/Button";
-import ColorCircle from "../ui/ColorCircle";
 import MyModal from "../ui/MyModal";
 import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import { add, remove } from "../../app/features/cartSlice";
@@ -14,118 +14,165 @@ interface IProps {
 	setIsEditOpen: (b: boolean) => void;
 	idx: number;
 	setIdx: (n: number) => void;
-	setCategory: (c: ICategory) => void;
 }
 
-/**
- * Product component displays detailed information about a product.
- *
- * @param {IProps} props - The properties for the Product component.
- * @returns {JSX.Element} The rendered Product component.
- */
 function Product({
 	product,
 	setProductToEdit,
 	setIsEditOpen,
 	idx,
 	setIdx,
-	setCategory,
 }: IProps) {
 	const cart = useAppSelector((state) => state.cart.items);
 	const dispatch = useAppDispatch();
-	const { title, price, description, images, category, colors } = product;
-	/**
-	 * Handles the edit action for the product.
-	 * Sets up the product for editing and opens the edit modal.
-	 */
+	const { title, price, description, images, category } = product;
+	const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+	const [isWishlisted, setIsWishlisted] = useState(false);
+
 	function handleEdit() {
 		setProductToEdit(product);
 		setIdx(idx);
-		setCategory(product.category);
 		setIsEditOpen(true);
 	}
 
-	const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-	return (
-		<div className="rounded-md border-2 p-3 bg-neutral-100">
-			<Image
-				src={images[0]}
-				alt={title}
-				className="w-full h-64 object-cover rounded-md"
-			/>
-			<h3 className="my-5 text-xl font-bold">{title}</h3>
-			<p className="my-5 line-clamp-3 h-[72px]">{description}</p>
-			<div className="flex items-center gap-2 my-5">
-				{colors &&
-					colors.map((c, i) => (
-						<ColorCircle
-							color={c}
-							key={i}
-							setProduct={setProductToEdit}
-							product={product}
-						/>
-					))}
-			</div>
-			<div className="flex justify-between items-center">
-				<span>${price}</span>
-				<Image
-					src={category.imgURL}
-					alt={category.name}
-					className="rounded-full w-8 h-8"
-				/>
-			</div>
-			<div className="flex gap-4 my-2">
-				<Button className="bg-blue-900" width="flex-1" onClick={handleEdit}>
-					EDIT
-				</Button>
-				<Button
-					className="bg-red-900"
-					width="flex-1"
-					onClick={() => setIsDeleteOpen(true)}>
-					DELETE
-				</Button>
+	function handleAddToCart() {
+		dispatch(add(product));
+		toast.success(`${title} added to cart`, {
+			icon: "🛒",
+			style: {
+				borderRadius: "10px",
+				background: "#333",
+				color: "#fff",
+			},
+		});
+	}
 
-				<MyModal
-					isOpen={isDeleteOpen}
-					title="Are you sure?"
-					onClose={() => setIsDeleteOpen(false)}>
-					Are you sure that you want to delete this product?
-					<div className="flex gap-3 mt-5">
+	function handleRemoveFromCart() {
+		dispatch(remove(product));
+		toast.error(`${title} removed from cart`, {
+			icon: "❌",
+			style: {
+				borderRadius: "10px",
+				background: "#333",
+				color: "#fff",
+			},
+		});
+	}
+
+	function handleWishlist() {
+		setIsWishlisted(!isWishlisted);
+		toast(isWishlisted ? "Removed from wishlist" : "Added to wishlist", {
+			icon: "❤️",
+			style: {
+				borderRadius: "10px",
+				background: "#333",
+				color: "#fff",
+			},
+		});
+	}
+
+	return (
+		<div className="group relative bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-2 overflow-hidden">
+			<div className="absolute top-4 right-4 z-10 flex space-x-2">
+				<button
+					onClick={handleWishlist}
+					className={`p-2 rounded-full transition-all ${
+						isWishlisted
+							? "bg-red-500 text-white"
+							: "bg-white/70 text-gray-600 hover:bg-red-100"
+					}`}>
+					<Heart size={20} fill={isWishlisted ? "white" : "none"} />
+				</button>
+			</div>
+
+			<div className="relative">
+				<Image
+					src={images[0]}
+					alt={title}
+					className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+				/>
+				<div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
+			</div>
+
+			<div className="p-5 space-y-4">
+				<div className="flex justify-between items-center">
+					<h3
+						className="text-xl font-bold text-gray-800 truncate max-w-[70%]"
+						title={title}>
+						{title}
+					</h3>
+					<span className="text-emerald-600 font-semibold text-lg">
+						${price}
+					</span>
+				</div>
+
+				<p className="text-gray-600 line-clamp-3 h-[72px]" title={description}>
+					{description}
+				</p>
+
+				<div className="flex items-center justify-between text-sm text-gray-500">
+					<span className="bg-gray-100 px-2 py-1 rounded-full">{category}</span>
+				</div>
+
+				<div className="grid grid-cols-2 gap-3">
+					<Button
+						onClick={handleEdit}
+						className="flex items-center justify-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white">
+						<Edit size={16} />
+						<span>Edit</span>
+					</Button>
+					<Button
+						onClick={() => setIsDeleteOpen(true)}
+						className="flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white">
+						<Trash2 size={16} />
+						<span>Delete</span>
+					</Button>
+				</div>
+
+				<div className="space-y-3">
+					<Button
+						onClick={handleAddToCart}
+						className="w-full flex items-center justify-center space-x-2 bg-green-600 hover:bg-green-700 text-white">
+						<ShoppingCart size={16} />
+						<span>Add to Cart</span>
+					</Button>
+					<Button
+						onClick={handleRemoveFromCart}
+						disabled={!cart.find((item) => item.id === product.id)}
+						className="w-full flex items-center justify-center space-x-2 bg-red-500 hover:bg-red-600 text-white disabled:bg-gray-400 disabled:cursor-not-allowed">
+						<Minus size={16} />
+						<span>Remove from Cart</span>
+					</Button>
+				</div>
+			</div>
+
+			<MyModal
+				isOpen={isDeleteOpen}
+				title="Confirm Deletion"
+				onClose={() => setIsDeleteOpen(false)}>
+				<div className="space-y-4">
+					<p className="text-gray-700">
+						Are you sure you want to delete this product?
+					</p>
+					<div className="flex space-x-3">
 						<Button
-							className="bg-red-600 text-white font-medium py-2 px-4 rounded hover:bg-red-700 transition duration-200"
-							width="flex-1"
 							onClick={() => {
-								// const nextProducts = products.slice();
-								// nextProducts.splice(idx, 1);
-								// setProducts(nextProducts);
-								toast.success(`${product.title} Product has been deleted`);
-							}}>
+								toast.success(`${product.title} deleted successfully`);
+								setIsDeleteOpen(false);
+							}}
+							className="flex-1 bg-red-600 hover:bg-red-700 text-white">
 							Delete
 						</Button>
 						<Button
-							className="bg-emerald-600 text-white font-medium py-2 px-4 rounded hover:bg-emerald-700 transition duration-200"
-							width="flex-1"
-							onClick={() => setIsDeleteOpen(false)}>
-							Close
+							onClick={() => setIsDeleteOpen(false)}
+							className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800">
+							Cancel
 						</Button>
 					</div>
-				</MyModal>
-			</div>
-			<div className="flex flex-col space-y-2">
-				<Button
-					className="bg-green-600 hover:bg-green-500 text-white font-semibold py-2 rounded transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50"
-					onClick={() => dispatch(add(product))}>
-					Add to Cart
-				</Button>
-				<Button
-					className="bg-red-600 hover:bg-red-500 text-white font-semibold py-2 rounded transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-50 disabled:bg-gray-400 disabled:text-gray-500 disabled:cursor-not-allowed"
-					disabled={!cart.find((item) => item.id === product.id)}
-					onClick={() => dispatch(remove(product))}>
-					Remove from Cart
-				</Button>
-			</div>
+				</div>
+			</MyModal>
 
-			<Toaster />
+			<Toaster position="top-right" />
 		</div>
 	);
 }

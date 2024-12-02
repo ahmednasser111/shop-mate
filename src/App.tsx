@@ -12,10 +12,8 @@ import Input from "./components/ui/Input";
 import MyModal from "./components/ui/MyModal";
 import Colors from "./data/Colors";
 import FormInputs from "./data/FormInputs";
-import ProductList from "./data/ProductList";
 import { IProduct } from "./interfaces";
 import { productValidation } from "./validation";
-import { v4 as uuidv4 } from "uuid";
 import Select from "./components/ui/Select";
 import categoryList from "./data/CategoryList";
 import { defaultProduct } from "./data/defaults";
@@ -90,7 +88,6 @@ function App() {
 				title: product.title,
 				description: product.description,
 				price: product.price,
-				colors: product.colors,
 			});
 
 			if (Object.values(validationErrors).some((error) => error)) {
@@ -150,18 +147,6 @@ function App() {
 					{errors.colors}
 				</div>
 			)}
-
-			<div className="flex gap-2 flex-wrap">
-				{product.colors &&
-					product.colors.map((color) => (
-						<span
-							key={color}
-							className="p-2 rounded-md text-white"
-							style={{ backgroundColor: color }}>
-							{Colors[color]}
-						</span>
-					))}
-			</div>
 
 			<div className="flex gap-3 mt-5">
 				<Button
@@ -226,7 +211,6 @@ function App() {
 						setProductToEdit={setProductToEdit}
 						setIsEditOpen={openEditModal}
 						setIdx={setEditIndex}
-						setCategory={setCategory}
 					/>
 				))}
 			</div>
