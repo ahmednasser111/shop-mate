@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import toast, { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
 import { Heart, Edit, Trash2, ShoppingCart, Minus } from "lucide-react";
 import { IProduct } from "../../interfaces/index";
 import Image from "../Image/Image";
@@ -171,8 +171,6 @@ function Product({
 					</div>
 				</div>
 			</MyModal>
-
-			<Toaster position="top-right" />
 		</div>
 	);
 }

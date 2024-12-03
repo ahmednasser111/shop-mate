@@ -19,6 +19,7 @@ import categoryList from "./data/CategoryList";
 import { defaultProduct } from "./data/defaults";
 import { useAppSelector, useAppDispatch } from "./app/hooks";
 import { getProductList } from "./app/features/ProductsSlice";
+import { Toaster } from "react-hot-toast";
 
 const defaultErrors = {
 	title: "",
@@ -214,6 +215,7 @@ function App() {
 					/>
 				))}
 			</div>
+			<Toaster position="bottom-center" />
 		</main>
 	);
 }
