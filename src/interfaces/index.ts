@@ -20,13 +20,7 @@ export interface IProduct {
 	warrantyInformation?: string;
 	shippingInformation?: string;
 	availabilityStatus?: string;
-	reviews?: {
-		rating: number;
-		comment: string;
-		date: string;
-		reviewerName: string;
-		reviewerEmail: string;
-	}[];
+	reviews?: IReview[];
 	returnPolicy?: string;
 	minimumOrderQuantity?: number;
 	meta?: {
@@ -36,6 +30,13 @@ export interface IProduct {
 		qrCode: string;
 	};
 	thumbnail?: string;
+}
+export interface IReview {
+	rating: number;
+	comment: string;
+	date: string;
+	reviewerName: string;
+	reviewerEmail: string;
 }
 export interface IValidation {
 	title: string;

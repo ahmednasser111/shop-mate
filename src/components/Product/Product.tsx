@@ -1,4 +1,5 @@
 import { memo, useState } from "react";
+import { useNavigate } from "react-router-dom"; // Importing useNavigate
 import toast from "react-hot-toast";
 import { Heart, Edit, Trash2, ShoppingCart, Minus } from "lucide-react";
 import { IProduct } from "../../interfaces/index";
@@ -25,9 +26,10 @@ function Product({
 }: IProps) {
 	const cart = useAppSelector((state) => state.cart.items);
 	const dispatch = useAppDispatch();
-	const { title, price, description, images, category } = product;
+	const { title, price, description, images, category, id } = product;
 	const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 	const [isWishlisted, setIsWishlisted] = useState(false);
+	const navigate = useNavigate(); // Use navigate hook
 
 	function handleEdit() {
 		setProductToEdit(product);
@@ -71,8 +73,15 @@ function Product({
 		});
 	}
 
+	// Function to navigate to product details page
+	function openDetailsPage() {
+		navigate(`/product/${id}`); // Navigate to product details page using product id
+	}
+
 	return (
-		<div className="group relative bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-2 overflow-hidden">
+		<div
+			className="group relative bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 ease-in-out transform hover:-translate-y-2 overflow-hidden cursor-pointer"
+			onClick={openDetailsPage}>
 			<div className="absolute top-4 right-4 z-10 flex space-x-2">
 				<button
 					onClick={handleWishlist}
