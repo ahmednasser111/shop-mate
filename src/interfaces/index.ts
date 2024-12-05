@@ -31,6 +31,13 @@ export interface IProduct {
 	};
 	thumbnail?: string;
 }
+
+export interface ProductListResponse {
+	products: IProduct[];
+	total: number;
+	skip: number;
+	limit: number;
+}
 export interface IReview {
 	rating: number;
 	comment: string;
