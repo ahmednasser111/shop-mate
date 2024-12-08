@@ -31,13 +31,15 @@ function Product({
 	const [isWishlisted, setIsWishlisted] = useState(false);
 	const navigate = useNavigate(); // Use navigate hook
 
-	function handleEdit() {
+	function handleEdit(e: React.MouseEvent<HTMLButtonElement>) {
+		e.stopPropagation();
 		setProductToEdit(product);
 		setIdx(idx);
 		setIsEditOpen(true);
 	}
 
-	function handleAddToCart() {
+	function handleAddToCart(e: React.MouseEvent<HTMLButtonElement>) {
+		e.stopPropagation();
 		dispatch(add(product));
 		toast.success(`${title} added to cart`, {
 			icon: "🛒",
@@ -49,7 +51,8 @@ function Product({
 		});
 	}
 
-	function handleRemoveFromCart() {
+	function handleRemoveFromCart(e: React.MouseEvent<HTMLButtonElement>) {
+		e.stopPropagation();
 		dispatch(remove(product));
 		toast.error(`${title} removed from cart`, {
 			icon: "❌",
@@ -61,7 +64,8 @@ function Product({
 		});
 	}
 
-	function handleWishlist() {
+	function handleWishlist(e: React.MouseEvent<HTMLButtonElement>) {
+		e.stopPropagation();
 		setIsWishlisted(!isWishlisted);
 		toast(isWishlisted ? "Removed from wishlist" : "Added to wishlist", {
 			icon: "❤️",
@@ -131,7 +135,10 @@ function Product({
 						<span>Edit</span>
 					</Button>
 					<Button
-						onClick={() => setIsDeleteOpen(true)}
+						onClick={(e) => {
+							e.stopPropagation();
+							setIsDeleteOpen(true);
+						}}
 						className="flex items-center justify-center space-x-2 bg-red-600 hover:bg-red-700 text-white">
 						<Trash2 size={16} />
 						<span>Delete</span>
